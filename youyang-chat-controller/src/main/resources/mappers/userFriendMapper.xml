@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.UserFriendDao">
+
+    <!-- 根据用户ID查询好友列表 -->
+    <select id="querys" resultType="com.nf.yy.entity.UserFriend">
+        select user_id, friend_id, friend_nick from userfriend
+        where user_id=#{userId}
+    </select>
+
+    <!-- 查询指定好友资料 -->
+    <select id="query" resultType="com.nf.yy.entity.UserFriend">
+        select user_id, friend_id, friend_nick from userfriend
+        where user_id=#{userId} and friend_id=#{friendId}
+    </select>
+
+    <!-- 添加到数据库，绑定好友关系 -->
+    <insert id="insert" parameterType="com.nf.yy.entity.UserFriend">
+        insert into userfriend(user_id, friend_id, friend_nick)
+        values (#{userId},#{friendId},#{friendNick})
+    </insert>
+
+    <!-- 从数据库移除，解除好友关系 -->
+    <delete id="delete" parameterType="com.nf.yy.entity.UserFriend">
+        delete from userfriend where user_id=#{userId} and friend_id=#{friendId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.UserInfoDao">
+
+    <!-- 增加用户,用户注册 -->
+    <insert id="register" parameterType="com.nf.yy.entity.UserInfo" keyProperty="userId">
+        insert into userinfo(user_id, user_password, head_portrait, user_sex, user_nick, state_id)
+        values (#{userId},#{userPassword},#{headPortrait},#{userSex},#{userNick},#{stateId})
+    </insert>
+
+    <!-- 根据用户id获取用资料 -->
+    <select id="findByUserId" resultType="com.nf.yy.entity.UserInfo">
+        select * from userinfo where user_id=#{userId}
+    </select>
+
+    <!-- 根据用户id修改用户资料 -->
+    <update id="update" parameterType="com.nf.yy.entity.UserInfo" keyProperty="userId">
+        update userinfo
+        <set>
+            <if test="headPortrait!=null">head_portrait=#{headPortrait},</if>
+            <if test="userSex!=null">user_sex=#{userSex},</if>
+            <if test="userNick!=null">user_nick=#{userNick},</if>
+            <if test="userSignature!=null">user_signature=#{userSignature},</if>
+            <if test="provinceId!=null">province_id=#{provinceId},</if>
+            <if test="cityId!=null">city_id=#{cityId},</if>
+            <if test="countyId!=null">county_id=#{countyId},</if>
+            <if test="stateId!=null">state_id=#{stateId},</if>
+        </set>
+        where user_id=#{userId}
+    </update>
+
+    <!-- 根据关键字查找用户 -->
+    <select id="search" resultType="com.nf.yy.entity.UserInfo">
+        select user_id, user_password, head_portrait, user_sex, user_nick, user_signature, state_id, province_id, city_id, county_id from userinfo
+        where user_id like "%"#{keyboard}"%" or user_nick like "%"#{keyboard}"%"
+    </select>
+
+    <!-- 从数据库随机获取十条数据 -->
+    <select id="randomQuery" resultType="com.nf.yy.entity.UserInfo">
+        select user_id,user_nick,head_portrait from userinfo as u1
+        join (
+            select round( rand() *
+                ((select max(user_id) from userinfo) - (select min(user_id) from userinfo) ) +
+                (select min(user_id) from userinfo)
+            ) as id
+        ) as u2
+        where u1.user_id >= u2.id
+        order by u1.user_id limit 10;
+    </select>
+
+</mapper>

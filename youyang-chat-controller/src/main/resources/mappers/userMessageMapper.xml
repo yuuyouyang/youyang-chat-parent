@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.UserMessageDao">
+
+    <!-- 根据房间Id获取当前好友的历史消息（分页查询） -->
+    <select id="pageQueryMessage" resultType="com.nf.yy.entity.UserMessage">
+        select message_uuid, message_time, message_content, message_type, user_id, friend_id from usermessage
+        where (user_id=#{userId} and friend_id=#{friendId}) or (user_id=#{friendId} and friend_id=#{userId}) order by message_time
+    </select>
+
+    <!-- 获取与指定好友所有的图片类型信息 -->
+    <select id="getImgMessage" resultType="com.nf.yy.entity.UserMessage">
+        select message_uuid, message_time, message_content, message_type, user_id, friend_id from usermessage
+        where (user_id=#{userId} and friend_id=#{friendId}) or (user_id=#{friendId} and friend_id=#{userId}) and message_type='image'
+    </select>
+
+    <!-- 获取与指定好友最后50条消息 -->
+    <select id="getLatestMessage" resultType="com.nf.yy.entity.UserMessage">
+        select *  from (
+            select message_uuid, message_time, message_content, message_type, user_id, friend_id from usermessage
+            where (user_id=#{userId} and friend_id=#{friendId}) or (user_id=#{friendId} and friend_id=#{userId})
+            order by message_time desc limit 50
+	    ) u1 order by u1.message_time
+    </select>
+
+    <!-- 获取与指定好友最新一条消息 -->
+    <select id="getLastMessage" resultType="com.nf.yy.entity.UserMessage">
+            select message_uuid, message_time, message_content, message_type, user_id, friend_id from usermessage
+            where (user_id=#{userId} and friend_id=#{friendId}) or (user_id=#{friendId} and friend_id=#{userId})
+            order by message_time desc limit 1
+    </select>
+
+    <!-- 根据uuid获取群消息 -->
+    <select id="findByUuid" resultType="com.nf.yy.entity.UserMessage">
+        select message_uuid, message_time, message_content, message_type, user_id, friend_id, message_status from usermessage
+        where message_uuid=#{uuid}
+    </select>
+
+    <!-- 往数据库添加新消息 -->
+    <insert id="insertMessage" parameterType="com.nf.yy.entity.UserMessage">
+        insert into usermessage(message_uuid, message_time, message_content, message_type, user_id, friend_id)
+        values (#{messageUuid},#{messageTime},#{messageContent},#{messageType},#{userId},#{friendId})
+    </insert>
+
+    <!-- 删除数据，用于消息撤回 -->
+    <delete id="deleteMessage" parameterType="com.nf.yy.entity.UserMessage">
+        delete from usermessage where message_uuid=#{uuid}
+    </delete>
+
+    <!-- 修改消息状态 -->
+    <update id="updateState" parameterType="com.nf.yy.entity.UserMessage">
+    </update>
+
+</mapper>

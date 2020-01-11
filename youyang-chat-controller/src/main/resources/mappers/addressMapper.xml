@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.AddressDao">
+
+    <select id="findByParentId" resultType="com.nf.yy.entity.Address">
+        select code_id,address_name,parent_id from address where parent_id = ${parentId}
+    </select>
+
+    <select id="query" resultType="com.nf.yy.entity.Address">
+        select code_id,address_name,parent_id from address where code_id = ${codeId}
+    </select>
+
+</mapper>

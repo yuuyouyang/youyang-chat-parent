@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.MessageObjectDao">
+
+    <!-- 根用户id获取消息列表 -->
+    <select id="findByUserId" resultType="com.nf.yy.entity.MessageObject">
+        select user_id, object_type, object_id from messageobject where user_id=#{userId}
+    </select>
+
+    <!-- 插入一个新消息对象 -->
+    <insert id="insert" parameterType="com.nf.yy.entity.MessageObject">
+        insert into messageobject(user_id, object_type, object_id)
+        values (#{userId},#{objectType},#{objectId})
+    </insert>
+
+    <!-- 从数据库移除一个消息对象 -->
+    <delete id="delete" parameterType="com.nf.yy.entity.MessageObject">
+        delete from messageobject where user_id=#{userId} and object_id=#{objectId}
+    </delete>
+
+</mapper>

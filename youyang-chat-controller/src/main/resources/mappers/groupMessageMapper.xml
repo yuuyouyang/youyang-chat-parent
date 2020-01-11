@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.GroupMessageDao">
+
+    <!-- 根据群Id获取指定群的消息记录（分页查询） -->
+    <select id="pageQueryMessage" resultType="com.nf.yy.entity.GroupMessage">
+        select message_uuid, message_time, group_id, user_id, message_content, message_type from groupmessage
+        where group_id=#{groupId} order by message_time
+    </select>
+
+    <!-- 根据群Id获取指定群下所有的图片类型信息 -->
+    <select id="getImgMessage" resultType="com.nf.yy.entity.GroupMessage">
+        select message_uuid, message_time, group_id, user_id, message_content, message_type from groupmessage
+        where group_id=#{groupId} and message_type='image'
+    </select>
+
+    <!-- 根据群id获取指定群下最后50条消息 -->
+    <select id="getLatestMessage" resultType="com.nf.yy.entity.GroupMessage">
+        select *  from (
+	        select message_uuid, message_time, group_id, user_id, message_content, message_type from groupmessage
+            where group_id=#{groupId}
+            order by message_time desc limit 50
+	    ) g1 order by g1.message_time
+    </select>
+
+    <!-- 根据ID获取最新一条消息 -->
+    <select id="getLastMessage" resultType="com.nf.yy.entity.GroupMessage">
+        select message_uuid, message_time, group_id, user_id, message_content, message_type from groupmessage
+        where group_id=#{groupId}
+        order by message_time desc limit 1
+    </select>
+
+    <!-- 根据uuid获取群消息 -->
+    <select id="findByUuid" resultType="com.nf.yy.entity.GroupMessage">
+        select message_uuid, message_time, group_id, user_id, message_content, message_type from groupmessage
+        where message_uuid=#{uuid}
+    </select>
+
+    <!-- 往数据库添加新消息 -->
+    <insert id="insertMessage" parameterType="com.nf.yy.entity.GroupMessage">
+        insert into groupmessage(message_uuid, message_time, group_id, user_id, message_content, message_type)
+        values (#{messageUuid},#{messageTime},#{groupId},#{userId},#{messageContent},#{messageType})
+    </insert>
+
+    <!-- 删除数据，用于消息撤回 -->
+    <delete id="deleteMessage" parameterType="com.nf.yy.entity.GroupMessage">
+        delete from groupmessage where message_uuid=#{uuid}
+    </delete>
+
+</mapper>

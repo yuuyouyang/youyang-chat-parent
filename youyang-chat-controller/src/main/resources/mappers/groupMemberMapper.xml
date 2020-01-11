@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.GroupMemberDao">
+
+    <!-- 获取所有群成员信息 -->
+    <select id="findByGroupId" resultType="com.nf.yy.entity.GroupMember">
+        select group_id, member_id, member_nick, state_id from groupmember where group_id=#{groupId}
+    </select>
+
+    <!-- 获取所有群成员信息 -->
+    <select id="findByUserId" resultType="com.nf.yy.entity.GroupMember">
+        select group_id, member_id, member_nick, state_id from groupmember where member_id=#{userId}
+    </select>
+
+    <!-- 获取指定群指定成员信息 -->
+    <select id="queryMember" resultType="com.nf.yy.entity.GroupMember">
+        select group_id, member_id, member_nick, state_id from groupmember where group_id=#{groupId} and member_id=#{memberId}
+    </select>
+
+    <!-- 移除群成员 -->
+    <delete id="deleteMember">
+        delete from groupmember where group_id=#{groupId} and member_id =#{memberId}
+    </delete>
+
+    <!-- 添加群成员 -->
+    <insert id="insertMember" parameterType="com.nf.yy.entity.GroupMember">
+        insert into groupmember(group_id, member_id, member_nick, state_id)
+        values (#{groupId},#{memberId},#{memberNick},#{stateId})
+    </insert>
+
+    <!-- 修改群成员资料（群内昵称、状态） -->
+    <update id="updateMember" parameterType="com.nf.yy.entity.GroupMember">
+        update groupmember
+        <set>
+            <if test="memberNick">member_nick=#{memberNick},</if>
+            <if test="stateId">state_id=#{stateId},</if>
+        </set>
+        where group_id=#{groupId} and member_id=#{memberId}
+    </update>
+
+</mapper>

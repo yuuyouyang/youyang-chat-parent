@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.GroupDataDao">
+
+    <!-- 根据群id获取群资料 -->
+    <select id="findByGroupId" resultType="com.nf.yy.entity.GroupData">
+        select group_id, group_name, create_time, group_admin, group_portrait, group_introduce, state_id
+        from groupdata where group_id = #{groupId}
+    </select>
+
+    <!-- 根据用户id获取群资料 -->
+    <select id="findByUserId" resultType="com.nf.yy.entity.GroupData">
+        select group_id, group_name, create_time, group_admin, group_portrait, group_introduce, state_id
+        from groupdata where group_admin = #{userId}
+    </select>
+
+    <!-- 根据关键字搜索群 -->
+    <select id="search" resultType="com.nf.yy.entity.GroupData">
+        select group_id, group_name, create_time, group_admin, group_portrait, group_introduce, state_id
+        from groupdata where group_id like "%"#{keyboard}"%" or group_name like "%"#{keyboard}"%"
+    </select>
+
+    <!-- 从数据库随机获取十条数据 -->
+    <select id="randomQuery" resultType="com.nf.yy.entity.GroupData">
+        select group_id, group_name, group_portrait from groupdata as g1
+        join (
+            select round(rand() *
+                ((select max(group_id) from groupdata) - (select min(group_id) from groupdata)) +
+                (select min(group_id) from groupdata)
+            ) as id
+        ) as g2
+        where g1.group_id >= g2.id
+        order by g1.group_id limit 10;
+    </select>
+
+    <!-- 创建一个群 -->
+    <insert id="insert" parameterType="com.nf.yy.entity.GroupData" keyProperty="userId">
+        insert into groupdata(group_id, group_name, create_time, group_admin, group_portrait, group_introduce, state_id)
+        values (#{groupId}, #{groupName}, #{createTime}, #{groupAdmin}, #{groupPortrait}, #{groupIntroduce}, #{stateId})
+    </insert>
+
+    <!-- 根据群id修改群资料 -->
+    <update id="update" parameterType="com.nf.yy.entity.GroupData" keyProperty="userId">
+        update groupdata
+        <set>
+            <if test="groupName!=null">group_name=#{groupName},</if>
+            <if test="groupPortrait!=null">group_portrait=#{groupPortrait},</if>
+            <if test="groupIntroduce!=null">group_introduce=#{groupIntroduce},</if>
+            <if test="stateId!=null">state_id=#{stateId},</if>
+        </set>
+        where group_id=#{groupId}
+    </update>
+
+    <!-- 从数据库移除指定群 -->
+    <delete id="delete">
+        delete from groupdata where group_id=#{groupId}
+    </delete>
+
+</mapper>

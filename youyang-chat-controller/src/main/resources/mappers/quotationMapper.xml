@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.nf.yy.dao.QuotationDao">
+
+    <insert id="insert">
+        insert into quotations(message) values (#{message})
+    </insert>
+
+    <select id="quotation" resultType="string">
+        select message from quotations as q1
+        join (
+            select round( rand() *
+                ((select max(quotation_id) from quotations) - (select min(quotation_id) from quotations)) +
+                (select min(quotation_id) from quotations)
+            ) as id
+        ) as q2
+        where q1.quotation_id >= q2.id
+        order by q1.quotation_id limit 1;
+    </select>
+
+</mapper>
