@@ -53,7 +53,7 @@ public class GroupMessageController extends MessageController {
     public ResponseVO deleteMessage(@PathVariable String messageUuid, Authentication authentication) {
         ChatMessageVO chatMessageVO = groupMessageService.findByUuid(messageUuid);
         int count = groupMessageService.deleteMessage(messageUuid);
-        return getResponseVO(authentication.getName(), false, count, chatMessageVO);
+        return getResponseVO(authentication.getName(), count, chatMessageVO);
     }
 
 

@@ -64,7 +64,13 @@ public class MessageHandlingServiceImpl implements MessageHandlingService {
         for (MessageHandling messageHandling : messageHandlingList) {
             MessageHandlingVO messageHandlingVO = new MessageHandlingVO();
             BeanUtils.copyProperties(messageHandling, messageHandlingVO);
-            String objectId = messageHandling.getUserId().equals(userId) ? messageHandling.getFriendId() : userId;
+            String objectId = "";
+            if(messageHandling.getUserId().equals(userId)){
+                objectId =  messageHandling.getFriendId();
+            }
+            if(messageHandling.getFriendId().equals(userId)){
+                objectId =  messageHandling.getUserId();
+            }
             UserInfo userInfo = userInfoDao.findByUserId(objectId);
             messageHandlingVO.setUserNick(userInfo.getUserNick());
             messageHandlingVOList.add(messageHandlingVO);

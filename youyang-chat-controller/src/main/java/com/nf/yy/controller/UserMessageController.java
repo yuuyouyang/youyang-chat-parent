@@ -78,7 +78,7 @@ public class UserMessageController extends MessageController {
     public ResponseVO deleteMessage(@PathVariable String messageUuid, Authentication authentication) {
         ChatMessageVO chatMessageVO = userMessageService.findByUuid(messageUuid);
         int count = userMessageService.deleteMessage(messageUuid);
-        return getResponseVO(authentication.getName(), true, count, chatMessageVO);
+        return getResponseVO(authentication.getName(),  count, chatMessageVO);
     }
 
 }

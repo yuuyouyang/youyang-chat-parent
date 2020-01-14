@@ -20,5 +20,7 @@ public class MessageObjectVO {
     private String objectHead;
     /** 对象名称 */
     private String objectName;
+    /** 群主大大 */
+    private String groupAdmin;
 
 }

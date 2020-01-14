@@ -178,13 +178,6 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- 可高度配置的实用验证码生成工具 -->
-            <dependency>
-                <groupId>com.github.penggle</groupId>
-                <artifactId>kaptcha</artifactId>
-                <version>${kaptcha.version}</version>
-            </dependency>
-
             <!-- 生成图像缩略图的 Java类库 -->
             <dependency>
                 <groupId>net.coobird</groupId>

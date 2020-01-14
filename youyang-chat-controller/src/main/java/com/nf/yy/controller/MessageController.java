@@ -24,13 +24,15 @@ public class MessageController {
     /**
      * 进行文件的撤回操作
      */
-    public ResponseVO getResponseVO(String userId, boolean objectType, int count, ChatMessageVO chatMessageVO) {
+    public ResponseVO getResponseVO(String userId, int count, ChatMessageVO chatMessageVO) {
         if (count > 0) {
             UserInfo userInfo = userInfoService.findByUserId(userId);
             SystemMessageVO systemMessageVO = messageWithdrawalEncapsulation(chatMessageVO, userInfo);
             // 推送到/objectId/systemMessage
-            simpMessageSendingOperations.convertAndSendToUser(chatMessageVO.getUserId(), "/system/message", systemMessageVO);
-            if (objectType) {
+            if (chatMessageVO.getObjectType() == 0) {
+                simpMessageSendingOperations.convertAndSendToUser(chatMessageVO.getObjectId(), "/system/message", systemMessageVO);
+            } else {
+                simpMessageSendingOperations.convertAndSendToUser(chatMessageVO.getUserId(), "/system/message", systemMessageVO);
                 systemMessageVO.setObjectId(chatMessageVO.getUserId());
                 simpMessageSendingOperations.convertAndSendToUser(chatMessageVO.getObjectId(), "/system/message", systemMessageVO);
             }

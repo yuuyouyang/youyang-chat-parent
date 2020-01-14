@@ -75,6 +75,7 @@ public class MessageObjectServiceImpl implements MessageObjectService {
             GroupData groupData = groupDataDao.findByGroupId(messageObject.getObjectId());
             messageObjectVO.setObjectHead(groupData.getGroupPortrait());
             messageObjectVO.setObjectName(groupData.getGroupName());
+            messageObjectVO.setGroupAdmin(groupData.getGroupAdmin());
         } else {
             UserInfo userInfo = userInfoDao.findByUserId(messageObject.getObjectId());
             messageObjectVO.setObjectHead(userInfo.getHeadPortrait());
