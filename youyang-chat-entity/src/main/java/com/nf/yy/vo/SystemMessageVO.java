@@ -20,6 +20,10 @@ public class SystemMessageVO {
     public static final Integer JOIN_GROUP_CHAT = 3;
     /** 退出群聊提示 */
     public static final Integer EXIT_GROUP_CHAT = 4;
+    /** 群内禁言提示 */
+    public static final Integer BANNED_TO_POST = 5;
+    /** 禁言取消提示 */
+    public static final Integer ALLOWED_TO_SPEAK = 6;
 
     /** object-id */
     private String objectId;
@@ -27,8 +31,12 @@ public class SystemMessageVO {
     private String objectType;
     /** 消息id */
     private String messageUuid;
+    /** 请求方用户ID */
+    private String requestId;
     /** 请求方用户昵称 */
     private String requestNick;
+    /** 响应方用户ID */
+    private String responseId;
     /** 响应方用户昵称 */
     private String responseNick;
     /**  消息类型 */

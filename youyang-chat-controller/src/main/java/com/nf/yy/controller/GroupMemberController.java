@@ -6,9 +6,7 @@ import com.nf.yy.entity.GroupMember;
 import com.nf.yy.vo.ResponseVO;
 import com.nf.yy.entity.UserInfo;
 import com.nf.yy.service.impl.GroupMemberServiceImpl;
-import com.nf.yy.service.impl.UserInfoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -94,10 +92,30 @@ public class GroupMemberController extends MessageController {
     }
 
     /**
-     * 修改群成员资料（群内昵称、状态）
+     * 修改群成员资料（禁言状态）
      */
-    @PutMapping("/{groupId}/{memberId}")
-    public ResponseVO updateMember(@RequestBody GroupMember groupMember) {
+    @PutMapping("/state/{groupId}/{memberId}")
+    public ResponseVO updateMemberState(@RequestBody GroupMember groupMember) {
+        if (groupMemberService.updateMember(groupMember) > 0) {
+            if ("1".equals(groupMember.getStateId().toString())) {
+                GroupMember member = groupMemberService.queryMember(groupMember.getGroupId(), groupMember.getMemberId());
+                encapsulation(member, SystemMessageVO.ALLOWED_TO_SPEAK);
+            }
+            if ("2".equals(groupMember.getStateId().toString())) {
+                GroupMember member = groupMemberService.queryMember(groupMember.getGroupId(), groupMember.getMemberId());
+                encapsulation(member, SystemMessageVO.BANNED_TO_POST);
+            }
+            return ResponseVO.success("成员禁言状态修改成功！");
+        } else {
+            return ResponseVO.failed("成员禁言状态修改失败！");
+        }
+    }
+
+    /**
+     * 修改群成员资料（群内昵称）
+     */
+    @PutMapping("/nick/{groupId}/{memberId}")
+    public ResponseVO updateMemberNick(@RequestBody GroupMember groupMember) {
         if (groupMemberService.updateMember(groupMember) > 0) {
             return ResponseVO.success("成员资料修改成功！");
         } else {
@@ -113,6 +131,7 @@ public class GroupMemberController extends MessageController {
         SystemMessageVO systemMessageVO = new SystemMessageVO();
         // 指定消息类型为加入群聊提示
         systemMessageVO.setMessageType(messageType);
+        systemMessageVO.setResponseId(groupMember.getMemberId());
         systemMessageVO.setResponseNick(groupMember.getMemberNick());
         systemMessageVO.setObjectId(groupMember.getGroupId());
         simpMessageSendingOperations.convertAndSendToUser(groupMember.getGroupId(), "/system/message", systemMessageVO);
