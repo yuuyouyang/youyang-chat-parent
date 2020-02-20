@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="youyang-chat-util" />
         <module name="youyang-chat-service" />
         <module name="youyang-chat-entity" />
-        <module name="youyang-chat-util" />
         <module name="youyang-chat-dao" />
         <module name="youyang-chat-controller" />
       </profile>
